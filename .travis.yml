@@ -1,0 +1,25 @@
+# Use Ubuntu Xenial
+dist: xenial
+
+# Use OpenJDK 11
+language: java
+jdk: openjdk11
+
+# Cache .m2 directory
+cache:
+  directories:
+    - $HOME/.m2
+
+# Trigger plugin dependency installation
+install: ./mvnw -B -V license:help source:help javadoc:help deploy:help
+
+# Try packaging the project as a test
+script: ./mvnw -B verify
+
+# Do deployment once test is successful
+deploy:
+  skip_cleanup: true
+  on:
+    tags: true
+  provider: script
+  script: travis/deploy.sh
